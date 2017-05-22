@@ -1,6 +1,6 @@
 module WordNumber where
 
-import Data.List (intersperse)
+import           Data.List (intersperse)
 
 data Digit = Zero | One | Two | Three | Four |
   Five | Six | Seven | Eight | Nine deriving (Eq, Show, Enum)
