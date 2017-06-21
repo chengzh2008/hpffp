@@ -27,7 +27,7 @@ main = do
   quickCheck plusAssociative
 
 
-half :: Double -> Double
+half :: (Fractional a) => a -> a
 half x = x / 2
 
 prop_half :: Double -> Bool
