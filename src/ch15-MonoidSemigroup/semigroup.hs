@@ -4,7 +4,8 @@ module SemiGroup where
 
 import GHC.Generics
 import Data.Semigroup
-import Test.QuickCheck
+import Test.QuickCheck hiding (Failure, Success)
+import Control.Monad
 
 -- Trivial
 data Trivial = Trivial deriving (Eq, Show)
@@ -129,14 +130,71 @@ newtype Combine a b = Combine { unCombine :: (a -> b)} deriving (Generic)
 instance (Semigroup b) => Semigroup (Combine a b) where
   (Combine f) <> (Combine g) = Combine $ \a -> (f a) <> (g a)
 
--- need to figure out how to write the instance for function type
-instance (Arbitrary a, CoArbitrary b) => CoArbitrary (Combine a b) where
-  coarbitrary combine gen =
-    do xs <- arbitrary
-       coarbitrary (map (unCombine combine) xs) gen
-
+{- TODO: need to figure out how to write the instance for function type
+instance (CoArbitrary a, Arbitrary b) => Arbitrary (Combine a b) where
+  arbitrary = do
+    f <- promote (\a -> coarbitrary a arbitrary)
+    return $ Combine f
+-}
 type CombineIntSumIntAssoc = Combine Int (Sum Int) -> Combine Int (Sum Int) -> Combine Int (Sum Int) -> Bool
 
+-- Comp
+newtype Comp a = Comp { unComp :: (a -> a) } deriving (Generic)
+
+instance (Semigroup a) => Semigroup (Comp a) where
+  (Comp f) <> (Comp g) = Comp $ \a -> f a <> g a
+
+f = \x -> Sum $ getSum x + 1
+g = \x -> Sum $ getSum x - 2
+
+compF = Comp f
+compG = Comp g
+
+-- Validation
+data Validation a b = Failure a | Success b deriving (Eq, Show)
+
+instance (Semigroup a, Semigroup b) => Semigroup (Validation a b) where
+  Success b1 <> Success b2 = Success $ b2
+  Failure a1 <> Success b2 = Failure a1
+  Success b1 <> Failure a2 = Failure a2
+  Failure a1 <> Failure a2 = Failure $ a1
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Validation a b) where
+  arbitrary = do
+    a <- arbitrary
+    b <- arbitrary
+    frequency [ (1, return $ Failure a)
+              , (1, return $ Success b)]
+
+type ValidationStringSumIntAssoc = Validation String (Sum Int) -> Validation String (Sum Int) -> Validation String (Sum Int) -> Bool
+
+-- Validation with a Semigroup that accumulate success
+newtype AccumulateRight a b = AccumulateRight (Validation a b) deriving (Eq, Show)
+
+instance Semigroup b => Semigroup (AccumulateRight a b) where
+  (AccumulateRight (Success b1)) <> (AccumulateRight (Success b2)) = AccumulateRight $ Success $ b1 <> b2
+  (AccumulateRight (Failure a)) <> _ = AccumulateRight $ Failure a
+  _ <> (AccumulateRight (Failure a)) = AccumulateRight $ Failure a
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (AccumulateRight a b) where
+  arbitrary = do
+    a <- arbitrary
+    b <- arbitrary
+    frequency [ (1, return $ AccumulateRight $ Failure a)
+              , (1, return $ AccumulateRight $ Success b)]
+
+type AccumulateRightStringSumIntAssoc = AccumulateRight String (Sum Int) -> AccumulateRight String (Sum Int) -> AccumulateRight String (Sum Int) -> Bool
+
+-- Validation with a Semigroup that accumulate both failure and success
+newtype AccumulateBoth a b = AccumulateBoth (Validation a b) deriving (Eq, Show)
+
+instance (Semigroup a, Semigroup b) => Semigroup (AccumulateBoth a b) where
+  (AccumulateBoth (Failure a1)) <> (AccumulateBoth (Failure a2)) = AccumulateBoth $ Failure $ a1 <> a2
+  (AccumulateBoth (Success b1)) <> (AccumulateBoth (Success b2)) = AccumulateBoth $ Success $ b1 <> b2
+  (AccumulateBoth (Failure a)) <> _ = AccumulateBoth $ Failure a
+  _ <> (AccumulateBoth (Failure a)) = AccumulateBoth $ Failure a
+
+type AccumulateBothStringSumIntAssoc = AccumulateBoth String (Sum Int) -> AccumulateBoth String (Sum Int) -> AccumulateBoth String (Sum Int) -> Bool
 
 main :: IO ()
 main = do
@@ -148,5 +206,8 @@ main = do
   quickCheck (semigroupAssoc :: BoolConjAssoc)
   quickCheck (semigroupAssoc :: BoolDisjAssoc)
   quickCheck (semigroupAssoc :: OrStringIntAssoc)
-  -- quickcheck the funciton type
-  quickCheck (semigroupAssoc :: CombineIntSumIntAssoc)
+  -- TODO: quickcheck the funciton type
+  -- quickCheck (semigroupAssoc :: CombineIntSumIntAssoc)
+  quickCheck (semigroupAssoc :: ValidationStringSumIntAssoc)
+  quickCheck (semigroupAssoc :: AccumulateRightStringSumIntAssoc)
+  quickCheck (semigroupAssoc :: AccumulateBothStringSumIntAssoc)
