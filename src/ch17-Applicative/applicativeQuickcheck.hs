@@ -13,10 +13,22 @@ instance Arbitrary Bull where
 
 instance Monoid Bull where
   mempty = Fools
-  mappend _ _ = Fools
+  mappend a b
+    | a /= mempty && b == mempty = a
+    | a == mempty && b /= mempty = b
+    | otherwise = a
 
 instance EqProp Bull where
   (=-=) = eq
 
 main :: IO ()
-main = quickBatch (monoid Twoo)
+main = do
+  -- test monoid of Twoo
+  quickBatch (monoid Twoo)
+  -- test applicative of list
+  quickBatch $ applicative [("b", "w", 1 :: Int)]
+  -- or just specify the type
+  quickBatch $ applicative (undefined :: [(String, Maybe String, Int)])
+  -- or
+  quickBatch $ applicative trigger
+    where trigger = undefined :: [(String, Maybe String, Int)]
