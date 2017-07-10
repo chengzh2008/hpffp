@@ -52,6 +52,16 @@ take' n (Cons a as) = Cons a $ take' (n- 1) as
 -- new type for zipList
 newtype ZipList' a = ZipList' (List a) deriving (Eq, Show)
 
+instance Arbitrary a => Arbitrary (List a) where
+  arbitrary = do
+    a <- arbitrary
+    return $ Cons a Nil
+
+instance Arbitrary a => Arbitrary (ZipList' a) where
+  arbitrary = do
+    a <- arbitrary
+    return $ ZipList' a
+
 instance Eq a => EqProp (ZipList' a) where
   xs =-= ys =  xs' =-= ys'
     where xs' = let (ZipList' l) = xs in take' 3000 l
