@@ -3,7 +3,7 @@ module ChapterExercise where
 import Test.QuickCheck
 import Test.QuickCheck.Checkers
 import Test.QuickCheck.Classes
-import Control.Monad (liftM2)
+import Control.Monad (forM, liftM2)
 
 -- monad for Nope a
 data Nope a = NopeDotJpg deriving (Eq, Show)
@@ -133,7 +133,16 @@ a :: Monad m => m a -> m (a -> b) -> m b
 a ma mf = ma >>= \a -> mf >>= return . ($ a)
 
 meh :: Monad m => [a] -> (a -> m b) -> m [b]
-meh = undefined
+meh as famb = sequenceA $ fmap famb as
+
+meh' :: Monad m => [a] -> (a -> m b) -> m [b]
+meh' = forM
+
+flipType :: (Monad m) => [m a] -> m [a]
+flipType = sequenceA
+-- TODO: implement it using meh
+flipType' :: (Monad m) => [m a] -> m [a]
+flipType' ma = undefined
 
 
 main :: IO ()
