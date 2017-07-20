@@ -21,3 +21,4 @@ executable hpffp
                      , QuickCheck
                      , checkers
                      , semigroups
+                     , scotty
