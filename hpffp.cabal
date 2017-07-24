@@ -20,15 +20,17 @@ executable hpffp
   build-depends:       base >= 4.7 && < 5
                      , QuickCheck
                      , text
+                     , uuid
+                     , time >= 1.6
                      , containers >= 0.5
                      , checkers
                      , semigroups
                      , scotty
-                     , alsa-core
-                     , alsa-mixer
-                     , xmonad
-                     , xmonad-contrib
-                     , resourcet >= 1.1
-                     , transformers >= 0.5
-                     , persistent
-                     , persistent-postgresql
+                     --, alsa-core
+                     -- , alsa-mixer
+                     -- , xmonad
+                     -- , xmonad-contrib
+                     -- , resourcet >= 1.1
+                     -- , transformers >= 0.5
+                     -- , persistent
+                     -- , persistent-postgresql
