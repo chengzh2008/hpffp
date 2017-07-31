@@ -26,11 +26,13 @@ executable hpffp
                      , checkers
                      , semigroups
                      , scotty
+                     , wreq
+                     , bytestring >= 0.10
+                     , transformers >= 0.5
                      --, alsa-core
                      -- , alsa-mixer
                      -- , xmonad
                      -- , xmonad-contrib
                      -- , resourcet >= 1.1
-                     -- , transformers >= 0.5
                      -- , persistent
                      -- , persistent-postgresql
