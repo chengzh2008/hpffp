@@ -29,6 +29,7 @@ executable hpffp
                      , wreq
                      , bytestring >= 0.10
                      , transformers >= 0.5
+                     , random >= 1.1
                      --, alsa-core
                      -- , alsa-mixer
                      -- , xmonad
