@@ -30,6 +30,7 @@ executable hpffp
                      , bytestring >= 0.10
                      , transformers >= 0.5
                      , random >= 1.1
+                     , trifecta
                      --, alsa-core
                      -- , alsa-mixer
                      -- , xmonad
