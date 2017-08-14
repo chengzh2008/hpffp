@@ -1,10 +1,11 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, QuasiQuotes #-}
 
 module Text.Fractions where
 
 import Control.Applicative
 import Data.Ratio ((%))
 import Text.Trifecta
+import Text.RawString.QQ
 
 badFraction = "1/0"
 alsoBad = "10"
@@ -27,6 +28,29 @@ virtuousFraction = do
     0 -> fail "Denominator can not be zero"
     _ -> return (numerator % denominator)
 
+parseIntEof :: Parser Integer
+parseIntEof = integer >>= (\n -> eof >> return n)
+
+data DecimalOrRational = Le Double | Ri Rational deriving (Eq, Show)
+
+deciOrRati = [r|
+1.3
+1/3
+33/0
+333
+23.3
+|]
+
+-- TODO: not done yet
+decimalOrRational :: Parser DecimalOrRational
+decimalOrRational = do
+  skipMany (oneOf "\n")
+  v <- (Le <$> double) <|> (Ri <$> virtuousFraction)
+  skipMany (oneOf "\n")
+  return v
+
+
+
 main :: IO ()
 main = do
   print $ parseString parseFraction mempty shouldWork
@@ -35,3 +59,4 @@ main = do
   print $ parseString parseFraction mempty alsoBad
   -- print $ parseString parseFraction mempty  badFraction
   print $ parseString virtuousFraction mempty  badFraction
+  print $ parseString (some decimalOrRational) mempty deciOrRati

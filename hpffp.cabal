@@ -31,6 +31,8 @@ executable hpffp
                      , transformers >= 0.5
                      , random >= 1.1
                      , trifecta
+                     , raw-strings-qq
+                     , hspec
                      --, alsa-core
                      -- , alsa-mixer
                      -- , xmonad
