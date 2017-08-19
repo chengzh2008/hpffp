@@ -33,6 +33,10 @@ executable hpffp
                      , trifecta
                      , raw-strings-qq
                      , hspec
+                     , attoparsec >= 0.13
+                     , parsec >= 3.1
+                     , aeson >= 1.0
+                     , scientific >= 0.3
                      --, alsa-core
                      -- , alsa-mixer
                      -- , xmonad
