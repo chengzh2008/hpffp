@@ -81,6 +81,8 @@ maybeSuccess :: Result a -> Maybe a
 maybeSuccess (Success a) = Just a
 maybeSuccess _ = Nothing
 
+-- TODO: the rest of chapter exercises
+
 main :: IO ()
 main = hspec $ do
   describe "SemVer Parser" $ do
