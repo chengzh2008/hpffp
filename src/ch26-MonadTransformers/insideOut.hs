@@ -23,4 +23,13 @@ readerUnwrap = runReaderT eitherUnwrap
 
 
 embedded' :: MaybeT (ExceptT String (ReaderT () IO)) Int
-embedded' = MaybeT (const (Right (Just (1 :: Int))))
+-- explicitly write down the type, which will help you figure out the solution
+embedded' =  let a = (return . const (Right (Just (1 :: Int)))) -- () -> IO (Either String (Maybe Int))
+                 b = ReaderT a -- ReaderT () IO (Either String (Maybe Int))
+                 c = ExceptT b -- ExceptT String (ReaderT () IO) (Maybe Int)
+             in MaybeT c
+{-
+-- in another way
+embedded' = MaybeT $ ExceptT $ ReaderT $ (return . const (Right (Just 1)))
+
+-}

@@ -1,3 +1,4 @@
+import Control.Monad.Trans
 import Data.Tuple
 
 newtype StateT s m a = StateT { runStateT :: s -> m (a, s) }
@@ -35,3 +36,8 @@ instance Monad m => Monad (StateT s m) where
       (a, s') <- sma s
       (b, s'') <- runStateT (f a) s'
       return (b, s'')
+
+instance MonadTrans (StateT s) where
+  lift m = StateT $ \s -> do
+    a <- m
+    return (a, s)

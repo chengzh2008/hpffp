@@ -1,3 +1,5 @@
+import Control.Monad.Trans
+
 newtype EitherT e m a = EitherT { runEitherT :: m (Either e a) }
 
 instance Functor m => Functor (EitherT e m) where
@@ -16,6 +18,9 @@ instance Monad m => Monad (EitherT e m) where
     case v of
       Left e -> return (Left e)
       Right a -> runEitherT $ f a
+
+instance MonadTrans (EitherT e) where
+  lift m = EitherT $ fmap Right m
 
 swapEither :: Either e a -> Either a e
 swapEither (Left e) = Right e
