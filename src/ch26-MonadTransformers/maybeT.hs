@@ -1,3 +1,4 @@
+import Control.Monad.Trans
 import Control.Monad.Identity
 
 newtype MaybeT m a = MaybeT { runMaybeT :: m (Maybe a) }
@@ -40,3 +41,9 @@ instance Monad m => Monad (MaybeT m) where
     case v of
       Nothing -> return Nothing
       Just a -> runMaybeT $ f a
+
+instance MonadTrans MaybeT where
+  lift = MaybeT . fmap Just
+
+instance MonadIO m => MonadIO (MaybeT m) where
+  liftIO = lift . liftIO

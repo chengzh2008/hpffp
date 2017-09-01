@@ -22,6 +22,10 @@ instance Monad m => Monad (EitherT e m) where
 instance MonadTrans (EitherT e) where
   lift m = EitherT $ fmap Right m
 
+instance (MonadIO m) => MonadIO (EitherT e m) where
+  liftIO = lift . liftIO
+
+
 swapEither :: Either e a -> Either a e
 swapEither (Left e) = Right e
 swapEither (Right a) = Left a
