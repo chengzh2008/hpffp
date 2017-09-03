@@ -4,6 +4,7 @@ module HitCounter where
 -- Hit counter
 
 import Control.Monad.Trans.Class
+import Control.Monad.IO.Class
 import Control.Monad.Trans.Reader
 import Data.IORef
 import qualified Data.Map as M
@@ -24,14 +25,23 @@ type Handler = ActionT Text (ReaderT Config IO)
 bumpBoomp :: Text
           -> M.Map Text Integer
           -> (M.Map Text Integer, Integer)
-bumpBoomp k m = undefined
+bumpBoomp k m = (M.insert k bump m, bump)
+  where bump = (fromMaybe 0 (M.lookup k m)) + 1
 
 app :: Scotty ()
 app = get "/:key" $ do
   unprefixed <- param "key"
-  let key' = mappend undefined unprefixed
-  newInteger <- undefined
-  html $ mconcat [ "<h1>Success! Count was: "
+  config <- lift ask
+  let key' = mappend (prefix config) unprefixed
+      ref = counts config
+      map' = readIORef ref
+  (newMap, newInteger) <- liftIO (bumpBoomp key' <$> map')
+  liftIO $ print "map updated: "
+  liftIO $ print newMap
+  liftIO $ writeIORef ref newMap
+  html $ mconcat [ "<h1>Success! key was: "
+                 , key'
+                 , " and Count was: "
                  , TL.pack $ show newInteger
                  , "</h1"]
 
@@ -39,6 +49,7 @@ main :: IO ()
 main = do
   [prefixArg] <- getArgs
   counter <- newIORef M.empty
-  let config = undefined
-      runR = undefined
+  let config = Config { counts = counter
+                      , prefix = TL.pack prefixArg}
+      runR r = runReaderT r config
   scottyT 3000 runR app
