@@ -26,6 +26,7 @@ bumpBoomp :: Text
           -> M.Map Text Integer
           -> (M.Map Text Integer, Integer)
 bumpBoomp k m = (M.insert k bump m, bump)
+  -- 0 here is the default count is the key is not in the map
   where bump = (fromMaybe 0 (M.lookup k m)) + 1
 
 app :: Scotty ()
@@ -34,7 +35,7 @@ app = get "/:key" $ do
   config <- lift ask
   let key' = mappend (prefix config) unprefixed
       ref = counts config
-      map' = readIORef ref
+      map' = readIORef ref -- IO (M.Map Text Integer) thus use <$> next line
   (newMap, newInteger) <- liftIO (bumpBoomp key' <$> map')
   liftIO $ print "map updated: "
   liftIO $ print newMap
@@ -51,5 +52,6 @@ main = do
   counter <- newIORef M.empty
   let config = Config { counts = counter
                       , prefix = TL.pack prefixArg}
-      runR r = runReaderT r config
+      -- runR :: (ReaderT Config IO) Response -> IO Response
+      runR r = runReaderT r config -- here config is the input for Reader type
   scottyT 3000 runR app
