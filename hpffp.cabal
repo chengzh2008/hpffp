@@ -38,6 +38,7 @@ executable hpffp
                      , aeson >= 1.0
                      , scientific >= 0.3
                      , mtl >= 2.2
+                     , criterion
                      --, alsa-core
                      -- , alsa-mixer
                      -- , xmonad

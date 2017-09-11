@@ -1,0 +1,26 @@
+	Sat Sep  9 21:49 2017 Time and Allocation Profiling Report  (Final)
+
+	   largeCAF2 +RTS -hc -p -RTS
+
+	total time  =        0.71 secs   (710 ticks @ 1000 us, 1 processor)
+	total alloc = 1,584,219,776 bytes  (excludes profiling overheads)
+
+COST CENTRE MODULE SRC                         %time %alloc
+
+main        Main   largeCAF2.hs:(8,1)-(14,36)   83.2   45.0
+incdInts'   Main   largeCAF2.hs:5:1-24          16.8   55.0
+
+
+                                                                                 individual      inherited
+COST CENTRE  MODULE                SRC                        no.     entries  %time %alloc   %time %alloc
+
+MAIN         MAIN                  <built-in>                  46          0    0.0    0.0   100.0  100.0
+ CAF         Main                  <entire-module>             91          0    0.0    0.0   100.0  100.0
+  main       Main                  largeCAF2.hs:(8,1)-(14,36)  92          1   83.2   45.0   100.0  100.0
+   incdInts' Main                  largeCAF2.hs:5:1-24         94          1   16.8   55.0    16.8   55.0
+ CAF         GHC.Conc.Signal       <entire-module>             87          0    0.0    0.0     0.0    0.0
+ CAF         GHC.IO.Encoding       <entire-module>             81          0    0.0    0.0     0.0    0.0
+ CAF         GHC.IO.Encoding.Iconv <entire-module>             79          0    0.0    0.0     0.0    0.0
+ CAF         GHC.IO.Handle.FD      <entire-module>             71          0    0.0    0.0     0.0    0.0
+ CAF         GHC.IO.Handle.Text    <entire-module>             69          0    0.0    0.0     0.0    0.0
+ main        Main                  largeCAF2.hs:(8,1)-(14,36)  93          0    0.0    0.0     0.0    0.0
