@@ -39,6 +39,9 @@ executable hpffp
                      , scientific >= 0.3
                      , mtl >= 2.2
                      , criterion
+                     , vector
+                     , zlib >= 0.6
+                     , utf8-string >= 1.0
                      --, alsa-core
                      -- , alsa-mixer
                      -- , xmonad
