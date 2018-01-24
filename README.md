@@ -13,7 +13,7 @@
 * [Chap10 Folding List](/src/ch10-FoldingList)
 * [Chap11 Algebraic Data Types](/src/ch11-AlgebraicDataTypes)
 * [Chap12 Signaling Adversity](/src/ch12-SignalingAdversity)
-* [Chap13 Building Projects](/src/ch13-BuildingProjects]
+* [Chap13 Building Projects](/src/ch13-BuildingProjects)
 * [Chap14 Testing](/src/ch14-Testing)
 * [Chap15 Monoid Semigroup](/src/ch15-MonoidSemigroup)
 * [Chap16 Functor](/src/ch16-Functor)
@@ -30,6 +30,6 @@
 * [Chap27 Non-Strictness](/src/ch27-NonStrictness)
 * [Chap28 Basic Libraries](/src/ch28-BasicLibraries)
 * [Chap29 IO](/src/ch29-IO)
-* [Chap30 Exception]
-* [Chap31 Final Project]
+* Chap30 Exception
+* Chap31 Final Project
 
