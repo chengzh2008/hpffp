@@ -7,7 +7,7 @@
 * [Chap04 Types-1](/src/ch04-Types1)
 * [Chap05 Types-2](/src/ch05-Types2)
 * [Chap06 Type Classes](/src/ch06-Typeclasses)
-* [Chap07 Function Pattern](/src/ch07-FunctionPatten)
+* [Chap07 Function Pattern](/src/ch07-FunctionPattern)
 * [Chap08 Recursion](/src/ch08-Recursion)
 * [Chap09 List](/src/ch09-List)
 * [Chap10 Folding List](/src/ch10-FoldingList)
